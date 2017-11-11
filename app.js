@@ -1,6 +1,6 @@
 const express = require('express')
 require('dotenv').config()
-
+const PassportConfig = require('./config/passport')
 const app = express()
 
 // Set view engine 
