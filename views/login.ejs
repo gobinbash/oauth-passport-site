@@ -9,18 +9,25 @@
     <link rel="stylesheet" href="/assets/main.css">
     <style>
     #login {
-        width:60%;
-        margin: 15% auto;
+        width:30%;
+        margin: 12% auto;
+        min-width: 250px;
+        max-width: 300px;
     }
     </style>
 </head>
 <body>
-
+    <%- include('header'); %>
     <div class="container-fluid">
-        <%- include('header'); %>
-        <div id="login">
-        <a class="btn btn-danger btn-block" href="/auth/google"> Google </a>
-        
+        <div id="login" class="card">
+                <div class="card-header">
+                  LOGIN
+                </div>
+                <div class="card-body">
+                  <a class="btn btn-danger btn-block" href="/auth/google">Google + </a>
+                  <a class="btn btn-primary btn-block" href="/auth/facebook">Facebook</a>
+                  <a class="btn btn-dark btn-block" href="/auth/github">Github</a>
+                </div>
         </div>
     </div>
     
