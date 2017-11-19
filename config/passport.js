@@ -13,13 +13,28 @@ passport.use(new GoogleStrategy(
 
         console.log(profile)
 
-        new User({
-          googleId: profile.id,
-          first_name: profile.name.givenName,
-          last_name: profile.name.familyName
-        })
-        .save().then(newUser => {
-          console.log('newUser created', newUser)
-        })
+        // Check the user id exists
+
+        User.findOne({ googleId: profile.id})
+            .then(currentUser => {
+
+                if( currentUser ) {
+                    // User already exists
+                }
+                else {
+
+                    new User({
+                            googleId: profile.id,
+                            first_name: profile.name.givenName,
+                            last_name: profile.name.familyName
+                        })
+                        .save().then(newUser => {
+                            console.log('newUser created', newUser)
+                        })
+
+                }
+            })
+
+        
     }
 ))
