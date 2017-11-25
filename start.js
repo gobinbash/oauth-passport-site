@@ -5,7 +5,7 @@ const app = require('./app')
 
 // Mongoose connection 😄
 
-const db = mongoose.connect('mongodb://127.0.0.1:27017/oauth-test',{ useMongoClient: true})
+const db = mongoose.connect(process.env.MONGO_DB,{ useMongoClient: true})
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
