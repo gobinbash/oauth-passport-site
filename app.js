@@ -3,6 +3,7 @@ const PassportConfig = require('./config/passport')
 
 const cookieSession = require('cookie-session')
 const passport = require('passport')
+const AuthMiddlewares = require('./middlewares/auth-middlewares')
 
 const app = express()
 
@@ -37,7 +38,12 @@ app.get('/', (req, res) => {
 
 // Auth routes
 
-app.use('/auth', require('./routes/auth-routes'))
+app.use('/auth',AuthMiddlewares.Guest, require('./routes/auth-routes'))
+
+
+// User routes 
+
+app.use('/profile',AuthMiddlewares.AuthGaurd,require('./routes/user-routes'))
 
 module.exports = app;
 

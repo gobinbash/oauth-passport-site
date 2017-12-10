@@ -3,8 +3,10 @@ require('dotenv').config()
 
 const app = require('./app')
 
-// Mongoose connection 😄
 
+mongoose.Promise = global.Promise;
+
+// Mongoose connection 😄
 const db = mongoose.connect(process.env.MONGO_DB,{ useMongoClient: true})
 
 db.on('error', console.error.bind(console, 'connection error:'));
