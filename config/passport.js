@@ -4,53 +4,48 @@ const User = require('../models/User')
 
 // Serialize user
 passport.serializeUser((user, done) => {
-    done(null, user.id)
+  done(null, user.id)
 })
 
 // Deserialize user
 
-passport.deserializeUser((id, done) => {
-    User.findById(id).then((user) => {
-        done(null, user)
-    })
+passport.deserializeUser(async (id, done) => {
+  const user = await User.findById(id)
+  if (user) {
+    done(null, user)
+  }
 })
 
-passport.use(new GoogleStrategy(
+passport.use(
+  new GoogleStrategy(
     {
-        //Options for google strategy
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL:'/auth/google/redirect'
+      // Options for google strategy
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: '/auth/google/redirect'
     },
-    (accessToken, refreshToken, profile, done) => {
-        console.log('Yep')
+    async (accessToken, refreshToken, profile, done) => {
+      console.log('Yep')
 
-        console.log(profile)
+      console.log(profile)
 
-        // Check the user id exists
+      // Check the user id exists
 
-        User.findOne({ googleId: profile.id})
-            .then(currentUser => {
+      const currentUser = await User.findOne({ googleId: profile.id })
 
-                if( currentUser ) {
-                    // User already exists
-                    done(null, currentUser)
-                }
-                else {
+      if (currentUser) {
+        done(null, currentUser)
+      } else {
+        const newUser = new User({
+          googleId: profile.id,
+          first_name: profile.name.givenName,
+          last_name: profile.name.familyName
+        })
 
-                    new User({
-                            googleId: profile.id,
-                            first_name: profile.name.givenName,
-                            last_name: profile.name.familyName
-                        })
-                        .save().then(newUser => {
-                            console.log('newUser created', newUser)
-                            done(null, newUser)
-                        })
+        await newUser.save()
 
-                }
-            })
-
-        
+        done(null, newUser)
+      }
     }
-))
+  )
+)
